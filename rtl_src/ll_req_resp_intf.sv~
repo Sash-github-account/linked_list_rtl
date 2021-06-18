@@ -1,0 +1,24 @@
+module ll_req_resp_inft(
+			input logic clk,
+			input logic reset_n,
+			input logic req_vld,
+			input logic[1:0] req_type,
+			input logic[PTR_WD-1:0] req_pos,
+			input logic[WR_DATA_WD-1:0] req_data,
+			output logic resp_vld,
+			output logic[1:0] resp_type,
+			output logic[WR_DATA_WD-1:0] resp_data,
+			output logic resp_data_vld
+			);
+
+   always_ff@(posedge clk) begin
+      if(reset_n) begin
+      end
+      else begin
+	 
+      end
+      
+   end
+   
+   endmodule
+			

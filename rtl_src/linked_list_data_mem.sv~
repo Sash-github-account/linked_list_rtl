@@ -1,0 +1,9 @@
+module linked_list_data_mem(
+			    input 
+			    );
+  initial 
+    begin
+      $display("Hello, World");
+      $finish ;
+    end
+endmodule

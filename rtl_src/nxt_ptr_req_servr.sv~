@@ -1,0 +1,10 @@
+module nxt_ptr_req_servr(
+			 input logic clk,
+			 input logic reset_n,
+			 input logic req_in,
+			 output logic[PTR_WD-1:0] nxt_ptr
+			 );
+
+
+   logic [DATA_DEPTH-1:0] 			  nxt_ptr_aval;
+   

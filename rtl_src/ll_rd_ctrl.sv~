@@ -1,0 +1,4 @@
+module ll_rd_ctrl(
+		  input logic clk,
+		  input logic reset_n,
+		  

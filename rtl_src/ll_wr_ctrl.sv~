@@ -1,0 +1,10 @@
+module ll_wr_ctrl(
+		  input logic clk,
+		  input logic reset_n,
+		  input logic [WR_DATA_WD-1:0] data_to_wr,
+		  input logic data_to_wr_vld,
+		  output logic get_ptr,
+		  output logic 
+		  output logic [WR_DATA_WD-1:0] wr_data2ll_data_mem,
+		  output logic [WR_ADDR_WD-1:0] wr_data2ll_addr,
+		  output logic wr_data2ll_vld
