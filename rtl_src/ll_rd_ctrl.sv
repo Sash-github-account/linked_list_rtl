@@ -14,7 +14,7 @@ module ll_rd_ctrl(
 		  input logic [PTR_WD-1:0] 	rd_data_from_nxt_ptr,
 		  // Outputs to nxt_ptr_req_serv //
 		  output logic 			return_nxt_ptr,
-		  output logic [PTR_WD-1:0] 	pos_2_return_nxt_ptr,		  
+		  output logic [PTR_WD-1:0] 	pos_2_return_nxt_ptr, 
 		  // Outputs to data mem //
 		  output logic 			rd_req_to_mem_vld,
 		  output logic [WR_DATA_WD-1:0] rd_req_addr_to_mem,
@@ -22,6 +22,7 @@ module ll_rd_ctrl(
 		  input logic 			rd_data_from_mem_vld,
 		  input logic [WR_DATA_WD-1:0] 	rd_data_from_mem,
 		  // final read data sent to req_resp_intf //
+		  output logic 			rd_ctrl_ready,
 		  output logic 			rd_data_out_vld,
 		  output logic [WR_DATA_WD-1:0] rd_data_out
 		  
@@ -46,6 +47,7 @@ module ll_rd_ctrl(
       if(reset_n) begin
 	 rd_data_out_vld <= 0;	 
 	 rd_data_out	 <= 0;
+	 rd_ctrl_ready <= 1;	 
 	 rd_ctrl_cur_st <= IDLE;
 	 req_vld_to_nxt_ptr      <= 0;	      
 	 req_pop_to_nxt_ptr     <= 0;              
@@ -55,11 +57,13 @@ module ll_rd_ctrl(
       end
       else begin
 	 rd_ctrl_cur_st <= rd_ctrl_nxt_st;
-	 
+	 rd_ctrl_ready <= 0;
+
 	 case(rd_ctrl_nxt_st) 
 	   IDLE: begin
 	      rd_data_out_vld <= rd_data_from_mem_vld;	      
-	      rd_data_out <= rd_data_from_mem;	      
+	      rd_data_out <= rd_data_from_mem;	  
+	      rd_ctrl_ready <= 1;    
 	   end
 
 	   GET_POS_PTR: begin		                        

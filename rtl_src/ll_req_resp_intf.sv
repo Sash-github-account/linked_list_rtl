@@ -28,6 +28,7 @@ module ll_req_resp_intf(
 			// indicate position of new node to nxt_ptr_logic //
 			output logic [WR_ADDR_WD-1:0] wr_pos,
 			// Inputs from read controller //
+			input logic 		      rd_ctrl_ready_in,
 			input logic 		      rd_ctrl_data_out_vld,
 			input logic [WR_DATA_WD-1:0]  rd_ctrl_data_out,
 			// output to read controller //
@@ -373,7 +374,7 @@ module ll_req_resp_intf(
 
 
 	EXEC_RD: begin
-	   if(rd_ctrl_data_out_vld) ll_ctrl_nxt_st = SEND_RESP_OP;
+	   if(rd_ctrl_ready_in) ll_ctrl_nxt_st = SEND_RESP_OP;
 	   else ll_ctrl_nxt_st = EXEC_RD;	   
 	end
 
