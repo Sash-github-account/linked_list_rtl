@@ -3,7 +3,7 @@ A SystemVerilog RTL implementation of linked list with a test bench
 
 The input interface to the design is structured as a request-response mechanism:
 
-Input signals for request:
+**Input signals for request:**
 
 req_vld : 1-bit request valid indication
 
@@ -14,11 +14,12 @@ req_pos : Parametrized signal to indicate the node position (node number) at whi
 req_data : Parametrized signal carrying data corresponding to the request
 
 
-Input signal for response:
+**Input signal for response:**
 
 resp_taken: Asserted one cycle after the design drives a 1 on 'resp_vld'
 
-Output signals for response from the design:
+
+**Output signals for response from the design:**
 
 resp_vld : 1-bit response valid indication
 
@@ -29,7 +30,7 @@ resp_data : Response data, parametrized (same as req_data)
 resp_data_vld : Indicates data is valid
 
 
-This implementation currently supports the following linked-list operations:
+**This implementation currently supports the following linked-list operations:**
 
 // REQUEST types //
 
@@ -54,7 +55,7 @@ This implementation currently supports the following linked-list operations:
 // 9. make list empty ie., delete all nodes
 
 
-List of supported responses:
+**List of supported responses:**
 
 // RESPONSE types //
 
@@ -73,4 +74,21 @@ List of supported responses:
 // 6. Request type error
 
 
-Current version: tested error handling, insert and push operations with a simple. Rest of the operations yet to be tested with a more comprehensive test bench.
+**List of error types that will be reported as a response:**
+
+// Possible error types //
+
+// 0. Insert req when ll is empty, except at pos 0
+
+// 1. Delete req when ll is empty
+
+// 2. pop req when ll is empty
+
+// 3. illegal req type
+
+// 4. Empty ll when it is already empty
+
+
+**Tested features:**
+
+Tested error handling, insert and push operations with a simple. Rest of the operations yet to be tested with a more comprehensive test bench.
