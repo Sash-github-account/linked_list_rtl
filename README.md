@@ -74,9 +74,9 @@ The input interface to the design is structured as a request-response mechanism:
 
 // 6. read data and delete node(pop) from tail
 
-// 7. push to tail
+// 7. push to head
 
-// 8. push to head
+// 8. push to tail
 
 // 9. make list empty ie., delete all nodes
 
