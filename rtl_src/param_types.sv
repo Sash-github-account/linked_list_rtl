@@ -12,8 +12,8 @@ parameter RD_DATA_WD  = 8;
 // 4. delete a specific node
 // 5. read data and delete node(pop) from head
 // 6. read data and delete node(pop) from tail
-// 7. push to tail
-// 8. push to head
+// 7. push to head
+// 8. push to tail
 // 9. make list empty ie., delete all nodes
 typedef enum logic[3:0]{
 			RETURN_SIZE,
