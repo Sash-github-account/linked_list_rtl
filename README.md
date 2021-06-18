@@ -6,12 +6,9 @@ A SystemVerilog RTL implementation of linked list with a test bench.
 Below is a schematic chart of the various hierarchies (and corresponding sv files) in the design.
 
       
-         
-| 
-
- -->  i_ll ( linked_list_top.sv ): top level of the design with i/o ports.
-
-          |
+          i_ll ( linked_list_top.sv ):  Top level of the design with i/o ports.
+ 
+          |  
           
           --> i_hd_ptr ( hd_ptr.sv ) : Logic that handles head pointer updation and maintenace
           
