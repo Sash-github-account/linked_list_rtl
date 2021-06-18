@@ -7,28 +7,22 @@ Below is a schematic chart of the various hierarchies (and corresponding sv file
 
       
           i_ll ( linked_list_top.sv ):  Top level of the design with i/o ports.
- 
           |  
-          
           --> i_hd_ptr ( hd_ptr.sv ) : Logic that handles head pointer updation and maintenace
-          
-          --> i_nxt_ptr_req_servr ( nxt_ptr_req_servr.sv ): Logic that maintains free pointers, indicating the address of next available data memory slot.
-          
-          |                     |
-          
-          |                     --> i_dpfo ( detect_pos_first_one.v ): detects the address of next available memory slot taking the free pointer vector as input.
-          
           |
-          
-          --> i_linked_list_data_mem ( linked_list_data_mem.sv ): Dual port reg-file based node data storage
-          
+          --> i_nxt_ptr_req_servr ( nxt_ptr_req_servr.sv ): Logic that maintains free pointers, indicating the address of next available data memory slot.
+          |                     |
+          |                     --> i_dpfo ( detect_pos_first_one.v ): detects the address of next available memory slot taking the free pointer vector as input.
+          |         
+          --> i_linked_list_data_mem ( linked_list_data_mem.sv ): Dual port reg-file based node data storage       
+          |
           --> i_ll_nxt_ptr_logic ( ll_nxt_ptr_logic.sv ): Maintains list of next pointers as a reg-file corresponding to node position and handles updation of 
           |                                                next pointer as per request type of current operation.
           
-          --> i_ll_rd_ctrl ( ll_rd_ctrl.sv ): Handles read/pop requests, interacting with linked_list_data_mem and ll_nxt_ptr_logic.
-          
+          --> i_ll_rd_ctrl ( ll_rd_ctrl.sv ): Handles read/pop requests, interacting with linked_list_data_mem and ll_nxt_ptr_logic.  
+          |
           --> i_ll_wr_ctrl ( ll_wr_ctrl.sv ): Handles write/insert/push requests, interacting with linked_list_data_mem and ll_nxt_ptr_logic.
-          
+          |
           --> i_ll_req_resp_intf ( ll_req_resp_intf.sv ): Primary external interface, handles decoding of request types, controlling the execution of the request and generating appropriate responses.
 
 The input interface to the design is structured as a request-response mechanism:
