@@ -258,7 +258,7 @@ module linked_list_top(
 					 .rd_vld(i_ll_req_resp_intf_to_i_ll_rd_ctrl_rd_req_vld),
 					 .rd_pop(i_ll_req_resp_intf_to_i_ll_rd_ctrl_rd_req_pop),
 					 .rd_addr(i_ll_req_resp_intf_to_i_ll_rd_ctrl_rd_node_at_pos),
-					 .rd_ctrl_ready(i_ll_rd_ctrl_to_i_ll_req_resp_intf_rd_ctrl_ready),
+					 .rd_ctrl_ready_in(i_ll_rd_ctrl_to_i_ll_req_resp_intf_rd_ctrl_ready),
 					 .rd_ctrl_data_out_vld(i_ll_rd_ctrl_to_i_ll_req_resp_intf_rd_data_out_vld),
 					 .rd_ctrl_data_out(i_ll_rd_ctrl_to_i_ll_req_resp_intf_rd_data_out)
 					 );
