@@ -91,4 +91,8 @@ resp_data_vld : Indicates data is valid
 
 **Tested features:**
 
-Tested error handling, insert and push operations with a simple. Rest of the operations yet to be tested with a more comprehensive test bench.
+Tested error handling, insert and push operations with a simple test bench.
+
+**W.I.P:**
+
+Rest of the operations yet to be tested with a more comprehensive test bench.
