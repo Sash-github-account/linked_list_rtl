@@ -24,6 +24,9 @@ Below is a schematic chart of the various hierarchies (and corresponding sv file
           |
           \--> i_ll_req_resp_intf ( ll_req_resp_intf.sv ): Primary external interface, handles decoding of request types, controlling the execution of the request and generating appropriate responses.
 
+
+**Test Plan and Test bench architecture:** W.I.P
+
 The input interface to the design is structured as a request-response mechanism:
 
 **Input signals for request:**
@@ -118,4 +121,4 @@ Tested error handling, insert and push operations with a simple test bench.
 
 **W.I.P:**
 
-Rest of the operations yet to be tested with a more comprehensive test bench.
+Rest of the operations yet to be tested with a more comprehensive UVM based constrained random test bench.
