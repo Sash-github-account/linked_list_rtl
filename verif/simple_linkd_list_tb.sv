@@ -60,6 +60,7 @@ module tb;
    //------------//
    
 
+   // DUT instance //
    linked_list_top i_ll(
 			.clk(clk),
 			.reset_n(reset_n),
@@ -77,4 +78,6 @@ module tb;
 			// output from req_resp_intf to indicate ll_ctrl FSM ready //
 			.intf_ready(intf_ready)
 			);
+   //-----------//
+   
 endmodule
