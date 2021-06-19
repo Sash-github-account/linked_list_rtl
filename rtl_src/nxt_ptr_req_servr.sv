@@ -13,16 +13,18 @@ module nxt_ptr_req_servr(
 			 // Indicate ll_empty to req_resp_intf //
 			 output logic 		   ll_empty,
 			 // Output to write controller //
-			 output logic [PTR_WD-1:0] nxt_ptr
+			 output logic [PTR_WD-1:0] nxt_ptr_out
 			 );
 
 
    // Declarations //
-   logic [DATA_DEPTH-1:0] 			  nxt_ptr_avail;
+   logic [0:DATA_DEPTH-1] 			  nxt_ptr_avail;
+   logic [PTR_WD-1:0] 				  nxt_ptr;   
    //-----------//
 
    // Assignments //
    assign ll_empty = &nxt_ptr_avail;   
+   assign nxt_ptr_out = nxt_ptr;   
    //--------------//
    
    // Update next pointer available vector //

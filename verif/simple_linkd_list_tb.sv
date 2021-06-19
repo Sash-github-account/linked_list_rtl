@@ -29,38 +29,36 @@ module tb;
       resp_taken<= 0;
       #10;
       reset_n <= 0;
-      #100;
+      #200;
       $finish;
    end
    
-   // driver-monitor logic //
+   // driver logic
    always@(posedge clk) begin
       if(intf_ready & !reset_n & count < 5) begin
 	 req_vld<= 1;
 	 req_type<= PUSH_HEAD;
 	 req_pos<= 0;
-	 req_data<= count;
-	 count<= count+1;
+	 req_data<= (count == 0)? 'ha : (count == 1) ?  'hb : (count == 2)? 'hc: (count == 3) ? 'hd : (count == 4) ? 'he : 'hf;
       end
       else if(intf_ready & !reset_n & count >= 5) begin
 	 req_vld<= 1;
-	 req_type<= POP_TAIL_REQ;
+	 req_type<= POP_HEAD_REQ;
 	 req_pos<= 0;
-	 req_data<= 0;     
+	 req_data<= 0;    
       end
-      
-
-      
+      else req_vld <=0;
+     
       if(resp_vld) begin
 	 req_vld<= 0;
 	 resp_taken <= 1;
+	 if(!resp_taken & count < 5) count <= count + 1;
       end  
       else resp_taken <= 0;
    end
    //------------//
    
 
-   // DUT instance //
    linked_list_top i_ll(
 			.clk(clk),
 			.reset_n(reset_n),
@@ -78,6 +76,4 @@ module tb;
 			// output from req_resp_intf to indicate ll_ctrl FSM ready //
 			.intf_ready(intf_ready)
 			);
-   //-----------//
-   
 endmodule

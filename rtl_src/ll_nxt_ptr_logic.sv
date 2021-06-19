@@ -40,8 +40,8 @@ module ll_nxt_ptr_logic(
 	 node_cnt <= 0;	 
       end
       else begin
-	 if(wr_vld) node_cnt <= node_cnt + 1;
-	 else if (rd_delete) node_cnt <= node_cnt - 1;
+	 if(wr_vld & node_cnt < DATA_DEPTH) node_cnt <= node_cnt + 1;
+	 else if (rd_delete & node_cnt > 0) node_cnt <= node_cnt - 1;
 	 else if (make_ll_empty) node_cnt <= 0;	 
 	 else node_cnt <= node_cnt;	 
       end
@@ -90,6 +90,8 @@ module ll_nxt_ptr_logic(
 	       rd_data_out_vld <= 1;
 	    end
 	    else begin
+	       rd_data_out_vld <= 1;
+	       rd_data <= nxt_ptr_mem[rd_addr];
                for ( int i=0; i < DATA_DEPTH-1; i = i +1) begin
 		  if(i >= wr_pos & i<node_cnt) nxt_ptr_mem[i] <= nxt_ptr_mem[i+1];
 		  else if(i == wr_pos-1) nxt_ptr_mem[i] <= wr_data_nxt_ptr;		  

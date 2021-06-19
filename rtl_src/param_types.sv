@@ -53,13 +53,14 @@ typedef enum logic[2:0]{
 // 2. pop req when ll is empty
 // 3. illegal req type
 // 4. Empty ll when it is already empty
-
+// 5. Recieved request when interface is busy
 typedef enum logic[2:0]{
 			OTHER,
 			INS_LL_EMPTY,
 			DEL_LL_EMPTY,
 			POP_LL_EMPTY,
 			EMPTY_LL_EMPTY,
-			ILL_REQ_TYPE
+			ILL_REQ_TYPE,
+			REQ_WHEN_BUSY
 			} t_error_types;
 

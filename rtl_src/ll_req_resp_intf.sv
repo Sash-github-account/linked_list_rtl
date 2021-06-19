@@ -45,15 +45,15 @@ module ll_req_resp_intf(
 
 
    // Declarations //
-   typedef enum logic[3:0] {
-			    IDLE,
-			    EXEC_WR,
-			    EXEC_RD,
-			    EXEC_EMPTY_LL,
-			    SEND_RESP_SIZE,
-			    SEND_RESP_OP,	
-			    SEND_RESP_ERROR
-			    } t_req_resp_fsm_st;
+   typedef enum 				      logic[3:0] {
+								  IDLE,
+								  EXEC_WR,
+								  EXEC_RD,
+								  EXEC_EMPTY_LL,
+								  SEND_RESP_SIZE,
+								  SEND_RESP_OP,	
+								  SEND_RESP_ERROR
+								  } t_req_resp_fsm_st;
    
    t_req_resp_fsm_st	 ll_ctrl_cur_st ;   
    t_req_resp_fsm_st      ll_ctrl_nxt_st;
@@ -63,6 +63,7 @@ module ll_req_resp_intf(
    t_error_types                                      error_type;
    logic 					      error_detected;
    t_resp_types                                       determine_resp_type;
+   logic 					      req_vld_delyd;   
    //--------//
 
 
@@ -85,7 +86,7 @@ module ll_req_resp_intf(
 	    error_type = DEL_LL_EMPTY;
 	    error_detected = 1;
 	 end
-	 else if ((req_type == POP_HEAD | req_type == POP_TAIL) & ll_empty) begin
+	 else if ((req_type == POP_HEAD_REQ | req_type == POP_TAIL_REQ) & ll_empty) begin
 	    error_type = POP_LL_EMPTY;
 	    error_detected = 1;	    
 	 end
@@ -93,6 +94,10 @@ module ll_req_resp_intf(
 	    error_type = EMPTY_LL_EMPTY;
 	    error_detected = 1;	    
 	 end
+	 //else if (req_vld_delyd & !intf_ready) begin
+	 //   error_type = REQ_WHEN_BUSY;
+	 //   error_detected = 1;
+	 //end
 	 else begin
 	    error_type = OTHER;
 	    error_detected = 0;
@@ -106,9 +111,28 @@ module ll_req_resp_intf(
       
    end  
    //----------------//
-   
-   
 
+
+   
+   // delay request valid by one cycle and compare with intf_ready for error detection //
+   always_ff@(posedge clk) begin
+      if(reset_n) begin
+	 req_vld_delyd <= 0;	 
+      end
+      else begin
+	 if(req_vld & !req_vld_delyd) begin
+	    req_vld_delyd <= req_vld;
+	 end
+	 else if(req_vld & req_vld_delyd) begin
+	    req_vld_delyd <= 0;	    
+	 end
+	 else begin
+	    req_vld_delyd <= 0;	    
+	 end
+	 
+      end
+   end
+   //---------------//
    
    // ll controller FSM outputs //
    always_ff@(posedge clk) begin
@@ -208,39 +232,45 @@ module ll_req_resp_intf(
 
 	   
 	   EXEC_RD: begin
+	      if(rd_ctrl_ready_in & !rd_vld) begin
+		 rd_vld <= 1;	 	   
+		   case(req_type)		
+		     READ_NODE: begin
+			rd_pop <= 0;	 
+			rd_addr <= req_pos;
+			determine_resp_type <= RD_NODE_DATA;		      
+		     end
+		     DELETE_NODE: begin
+			rd_pop <= 1;	 
+			rd_addr <= req_pos;
+			determine_resp_type <= DEL_NODE_DATA;
+		     end
+		     POP_HEAD_REQ: begin
+			rd_pop <= 1;	 
+			rd_addr <= 0;
+			determine_resp_type <= POP_HEAD;
+		     end
+		     POP_TAIL_REQ: begin
+			rd_pop <= 1;	 
+			rd_addr <= ll_size;
+			determine_resp_type <= POP_TAIL;
+		     end
+		     
+		     default: begin
+			rd_vld <= 0;	 
+			rd_pop <= 0;	 
+			rd_addr <= 0;
+			determine_resp_type <= ERROR;
+		     end
+		     
+		   endcase // case (req_type_int)
+	      end // if (rd_ctrl_ready_in & !rd_vld)
+	      else begin
+		 rd_vld <= 0;	 
+		 rd_pop <= 0;	
+	      end // else: !if(rd_ctrl_ready_in & !rd_vld)
+	      
 
-	      rd_vld <= 1;	 
-
-	      case(req_type)		
-		READ_NODE: begin
-		   rd_pop <= 0;	 
-		   rd_addr <= req_pos;
-		   determine_resp_type <= RD_NODE_DATA;		      
-		end
-		DELETE_NODE: begin
-		   rd_pop <= 1;	 
-		   rd_addr <= req_pos;
-		   determine_resp_type <= DEL_NODE_DATA;
-		end
-		POP_HEAD_REQ: begin
-		   rd_pop <= 1;	 
-		   rd_addr <= 0;
-		   determine_resp_type <= POP_HEAD;
-		end
-		POP_TAIL_REQ: begin
-		   rd_pop <= 1;	 
-		   rd_addr <= ll_size;
-		   determine_resp_type <= POP_TAIL;
-		end
-		
-		default: begin
-		   rd_vld <= 0;	 
-		   rd_pop <= 0;	 
-		   rd_addr <= 0;
-		   determine_resp_type <= ERROR;
-		end
-		
-	      endcase // case (req_type_int)
 	   end // case: EXEC_RD
 	   
 
@@ -374,7 +404,8 @@ module ll_req_resp_intf(
 
 
 	EXEC_RD: begin
-	   if(rd_ctrl_ready_in) ll_ctrl_nxt_st = SEND_RESP_OP;
+	   if(rd_ctrl_ready_in & req_type == DELETE_NODE  ) ll_ctrl_nxt_st = SEND_RESP_OP;
+	   else if(rd_ctrl_data_out_vld) ll_ctrl_nxt_st = SEND_RESP_OP;
 	   else ll_ctrl_nxt_st = EXEC_RD;	   
 	end
 

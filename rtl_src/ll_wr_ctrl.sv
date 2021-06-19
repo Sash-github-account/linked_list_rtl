@@ -5,7 +5,7 @@ module ll_wr_ctrl(
 		  input logic [WR_DATA_WD-1:0] 	data_to_wr,
 		  input logic 			data_to_wr_req,
 		  input logic 			insert_data,
-		  // get next available data //
+		  // get next available data mem pointer//
 		  input logic [PTR_WD-1:0] 	nxt_ptr_from_servr,
 		  input logic 			nxt_ptr_wr_done,
 		  // from data mem //
@@ -32,8 +32,6 @@ module ll_wr_ctrl(
    
    t_wr_ctrl_fsm_st   wr_ctrl_nxt_st;   
    t_wr_ctrl_fsm_st wr_ctrl_cur_st;
-   logic [PTR_WD-1:0] 				head_ptr;
-   logic [WR_DATA_WD-1:0] 			data_to_wr_int; 
    logic 					fsm_active;
    //----------//
 
@@ -43,22 +41,6 @@ module ll_wr_ctrl(
    assign wr_ctrl_fsm_ready = ~fsm_active;
    //----------//
 
-   
-
-   // Hold data internally //
-   always_ff@(posedge clk) begin
-      
-      if(reset_n) begin
-	 data_to_wr_int <= 0;    
-      end
-      else begin
-	 if(data_to_wr_req & !fsm_active) data_to_wr_int <= data_to_wr;
-	 else data_to_wr_int <= data_to_wr_int;	 
-      end
-      
-   end 
-   //----------//
-   
 
 
    // Write controller FSM outputs //
@@ -69,9 +51,9 @@ module ll_wr_ctrl(
 	 wr_data2ll_data_mem <= 0;
 	 wr_data2ll_addr <= 0;
 	 wr_data2ll_vld <= 0;
-	 head_ptr  <= 0;	
 	 wr_ctrl_cur_st <= IDLE;
 	 fsm_active <= 0;
+	 upd_nxt_ptr_insert <= 0;
 	 
       end
       else begin
@@ -86,13 +68,15 @@ module ll_wr_ctrl(
 	      wr_data2ll_data_mem <= 0;
 	      wr_data2ll_addr <= 0;
 	      wr_data2ll_vld <= 0;
+	      upd_nxt_ptr_insert <= 0;	      
 	   end
 
 	   UPD_NXTPTR_DATAMEM: begin
 	      upd_nxt_ptr <= 1;
 	      cur_nxt_ptr <= nxt_ptr_from_servr;
 	      fsm_active <= 1;
-	      wr_data2ll_data_mem <= data_to_wr_int;
+	      upd_nxt_ptr_insert <= insert_data;	      
+	      wr_data2ll_data_mem <= data_to_wr;
 	      wr_data2ll_addr <= nxt_ptr_from_servr;
 	      wr_data2ll_vld <= 1;
 	   end
@@ -101,7 +85,7 @@ module ll_wr_ctrl(
 	      upd_nxt_ptr <= 0;
 	      fsm_active <= 1;
 	      cur_nxt_ptr <= 0;
-//	      cur_nxt_ptr_vld <= 0;
+	      upd_nxt_ptr_insert <= 0;	      
 	      wr_data2ll_data_mem <= 0;
 	      wr_data2ll_addr <= 0;
 	      wr_data2ll_vld <= 0;

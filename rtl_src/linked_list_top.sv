@@ -63,7 +63,7 @@ module linked_list_top(
    
    logic 					     i_ll_rd_ctrl_to_i_linked_list_data_mem_rd_vld;
    logic [RD_ADDR_WD-1:0] 			     i_ll_rd_ctrl_to_i_linked_list_data_mem_rd_addr;
-   logic [RD_DATA_WD-1:0] 			     i_linked_list_data_mem_to_i_ll_rd_ctrl_rd_data;
+   logic [WR_DATA_WD-1:0] 			     i_linked_list_data_mem_to_i_ll_rd_ctrl_rd_data;
    logic 					     i_linked_list_data_mem_to_i_ll_rd_ctrl_rd_data_out_vld;
  
    logic [PTR_WD-1:0] 				     i_nxt_ptr_req_servr_to_i_ll_wr_ctrl_nxt_ptr;
@@ -110,6 +110,7 @@ module linked_list_top(
 	      );  
    //------------//
 
+
    // Logic that keeps track of available memory pointers  //
    nxt_ptr_req_servr i_nxt_ptr_req_servr(
 					 .clk(clk),
@@ -120,9 +121,9 @@ module linked_list_top(
 					 // From/to req_resp_intf //
 					 .make_ll_empty(i_ll_req_resp_intf_to_i_ll_nxt_ptr_logic_make_ll_empty),
 					.ll_empty(i_nxt_ptr_req_servr_to_i_ll_req_resp_intf_make_ll_empty),
-					 // From/to write pointer//
-					 .upd_nxt_ptr(i_ll_wr_ctrl_to_i_rnxt_ptr_req_servr_upd_nxt_ptr),
-					 .nxt_ptr(i_rnxt_ptr_req_servr_to_i_ll_wr_ctrl_nxt_ptr)
+					 // From/to write controller//
+					 .upd_nxt_ptr(i_ll_nxt_ptr_logic_to_i_ll_wr_ctrl_wr_done),
+					 .nxt_ptr_out(i_nxt_ptr_req_servr_to_i_ll_wr_ctrl_nxt_ptr)
 					 );
    //-----------//
 
@@ -214,9 +215,9 @@ module linked_list_top(
 			   .insert_data(i_ll_req_resp_intf_to_i_ll_wr_ctrl_wr_insert),
 			   .wr_ctrl_fsm_ready(i_ll_wr_ctrl_to_i_ll_req_resp_intf_wr_ctrl_fsm_ready_in),
 			   // From/to nxt avail ptr logic //
-			   .nxt_ptr_from_servr(i_rnxt_ptr_req_servr_to_i_ll_wr_ctrl_nxt_ptr),
-			   // From/to nxt_ptr_logic //
+			   .nxt_ptr_from_servr(i_nxt_ptr_req_servr_to_i_ll_wr_ctrl_nxt_ptr),
 			   .nxt_ptr_wr_done(i_ll_nxt_ptr_logic_to_i_ll_wr_ctrl_wr_done),
+			   // From/to nxt_ptr_logic //
 			   .upd_nxt_ptr(i_ll_wr_ctrl_to_i_ll_nxt_ptr_logic_upd_nxt_ptr),
 			   .upd_nxt_ptr_insert(i_ll_wr_ctrl_to_i_ll_nxt_ptr_logic_upd_nxt_ptr_insert), 
 			   .cur_nxt_ptr(i_ll_wr_ctrl_to_i_ll_nxt_ptr_logic_cur_nxt_ptr),
