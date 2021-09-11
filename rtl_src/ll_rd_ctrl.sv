@@ -68,15 +68,18 @@ module ll_rd_ctrl(
 	      req_vld_to_nxt_ptr      <= 0;	      
 	      req_pop_to_nxt_ptr     <= 0;              
 	      node_at_pos_to_nxt_ptr <= 0;
-	      return_nxt_ptr <= 0;	      
-	      pos_2_return_nxt_ptr <= 0;
+	      
 	      if(!rd_ctrl_ready) begin
 		 rd_data_out_vld <= rd_data_from_mem_vld;	      
 		 rd_data_out <= rd_data_from_mem;
+		 return_nxt_ptr <= 1;	      
+		 pos_2_return_nxt_ptr <= 0;
 	      end
 	      else begin
 		 rd_data_out_vld <= 0;	      
 		 rd_data_out <= 0;
+		 return_nxt_ptr <= 0;	      
+		 pos_2_return_nxt_ptr <= 0;
 	      end
               rd_ctrl_ready <= 1;
 	   end
@@ -94,7 +97,7 @@ module ll_rd_ctrl(
 	   UPD_NXT_PTR: begin
 	      req_vld_to_nxt_ptr      <= rd_req_vld;	      
 	      req_pop_to_nxt_ptr     <= rd_req_pop;              
-	      node_at_pos_to_nxt_ptr <= rd_node_at_pos;
+	      node_at_pos_to_nxt_ptr <= rd_node_at_pos ;
 	      return_nxt_ptr <= 0;	      
 	      pos_2_return_nxt_ptr <= 0;
 	      rd_data_out_vld <= 0;
@@ -107,8 +110,8 @@ module ll_rd_ctrl(
 	      req_vld_to_nxt_ptr      <= 0;	      
 	      req_pop_to_nxt_ptr     <= 0;              
 	      node_at_pos_to_nxt_ptr <= 0;
-	      return_nxt_ptr <= 1;	      
-	      pos_2_return_nxt_ptr <= rd_data_from_nxt_ptr;
+	      return_nxt_ptr <= 0;	      
+	      pos_2_return_nxt_ptr <= 0;
 	      rd_data_out_vld <= 0;	      
 	      rd_data_out <= 0;
 	   end

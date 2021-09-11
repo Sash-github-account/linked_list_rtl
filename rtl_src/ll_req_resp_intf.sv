@@ -252,7 +252,7 @@ module ll_req_resp_intf(
 		     end
 		     POP_TAIL_REQ: begin
 			rd_pop <= 1;	 
-			rd_addr <= ll_size;
+			rd_addr <= ll_size-1;
 			determine_resp_type <= POP_TAIL;
 		     end
 		     
